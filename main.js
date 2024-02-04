@@ -1,44 +1,51 @@
+// Mengambil fungsi-fungsi yang ada di file api.js
+
+import { getNews } from "./api.js";
+import { generateElement, formatingDate } from "./utils.js";
+
+const postContainer = document.getElementById("post-container");
+
 // nav background
 let header = document.querySelector("header");
 
 window.addEventListener("scroll", () => {
-    header.classList.toggle("shadow", window.scrollY > 0)
-})
-
-//Filter
-$(document).ready(function () {
-    $(".filter-item").click(function () {
-        const value = $(this).attr("data-filter");
-        if (value == "all"){
-            $(".post-box").show("1000")
-        } else{
-            $(".post-box")
-                .not("." + value)
-                .hide(1000);
-            $(".post-box")
-            .filter("." + value)
-            .show("1000")
-        }
-    });
-    $(".filter-item").click(function () {
-        $(this).addClass("active-filter").siblings().removeClass("active-filter")
-    });
+  header.classList.toggle("shadow", window.scrollY > 0);
 });
 
+//Filter
+// $(document).ready(function () {
+//     $(".filter-item").click(function () {
+//         const value = $(this).attr("data-filter");
+//         if (value == "all"){
+//             $(".post-box").show("1000")
+//         } else{
+//             $(".post-box")
+//                 .not("." + value)
+//                 .hide(1000);
+//             $(".post-box")
+//             .filter("." + value)
+//             .show("1000")
+//         }
+//     });
+//     $(".filter-item").click(function () {
+//         $(this).addClass("active-filter").siblings().removeClass("active-filter")
+//     });
+// });
+
 // Mengambil data dari API
-fetch('https://newsapi.org/v2/everything?q=tesla&from=2024-01-03&sortBy=publishedAt&apiKey=bb54a05ddc8644bda78a8ad6b22edfde')
-  .then(response => response.json())
-  .then(data => {
-    // Memasukkan data ke dalam elemen HTML
-    document.querySelector('.post-img').src = data.articles[0].urlToImage;
-    document.querySelector('.category').textContent = data.articles[0].url;
-    document.querySelector('.post-title').textContent = data.articles[0].title;
-    document.querySelector('.post-date').textContent = data.articles[0].publishedAt;
-    document.querySelector('.post-description').textContent = data.articles[0].description;
-    document.querySelector('.profile-img').src = "url_gambar_profile"; // Tambahkan URL gambar profil
-    document.querySelector('.profile-name').textContent = data.articles[0].source.name; // Tambahkan nama penulis
-  })
-  .catch(error => console.error(error));
+// fetch('https://newsapi.org/v2/everything?q=tesla&from=2024-01-03&sortBy=publishedAt&apiKey=bb54a05ddc8644bda78a8ad6b22edfde')
+//   .then(response => response.json())
+//   .then(data => {
+//     // Memasukkan data ke dalam elemen HTML
+//     document.querySelector('.post-img').src = data.articles[0].urlToImage;
+//     document.querySelector('.category').textContent = data.articles[0].url;
+//     document.querySelector('.post-title').textContent = data.articles[0].title;
+//     document.querySelector('.post-date').textContent = data.articles[0].publishedAt;
+//     document.querySelector('.post-description').textContent = data.articles[0].description;
+//     document.querySelector('.profile-img').src = "url_gambar_profile"; // Tambahkan URL gambar profil
+//     document.querySelector('.profile-name').textContent = data.articles[0].source.name; // Tambahkan nama penulis
+//   })
+//   .catch(error => console.error(error));
 
 //   // Mengambil data dari API
 //   fetch('https://newsapi.org/v2/everything?q=tesla&from=2024-01-02&sortBy=publishedAt&apiKey=bb54a05ddc8644bda78a8ad6b22edfde')
@@ -88,3 +95,87 @@ fetch('https://newsapi.org/v2/everything?q=tesla&from=2024-01-03&sortBy=publishe
 //   .catch(error => {
 //     console.error('There has been a problem with your fetch operation:', error);
 //   });
+
+// template
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Mengambil semua data news dari fungsi `getNews`
+  const handleGetNews = async () => {
+    try {
+      const response = await getNews();
+
+      console.log({ response })
+
+      response.forEach((news) => {
+        // Buat pembungkus kartu nya
+        const postBox = generateElement({
+          tag: "div",
+          className: "post-box tech",
+        });
+
+        const postImg = generateElement({
+          tag: "img",
+          src: news.images,
+          className: "post-img",
+        });
+
+        const category = generateElement({
+          tag: "h2",
+          className: "category",
+          value: "TECH",
+        });
+
+        const postTitle = generateElement({
+          tag: "a",
+          href: "#",
+          className: "post-title",
+          value: news.title,
+        });
+
+        const postDate = generateElement({
+          tag: "span",
+          value: formatingDate(news.published_at),
+          className: "post-date",
+        });
+
+        const description = generateElement({
+          tag: "p",
+          value: news.description,
+          className: "post-description",
+        });
+
+        // ========= Pembungkus div profile
+
+        const profile = generateElement({
+          tag: "div",
+          className: "profile",
+        });
+
+        const profileImg = generateElement({
+          tag: "img",
+          src: news.avatar,
+          className: "profile-img",
+        });
+
+        const profileName = generateElement({
+          tag: "span",
+          value: news.author,
+          className: "profile-name",
+        });
+
+        // ========= Pembungkus div profile
+
+        profile.append(...[profileImg, profileName]);
+        postBox.append(
+          ...[postImg, category, postTitle, postDate, description, profile]
+        );
+
+        postContainer.append(postBox);
+      });
+    } catch (error) {
+      console.error({ error });
+    }
+  };
+
+  handleGetNews();
+});
