@@ -209,14 +209,16 @@ document.addEventListener("DOMContentLoaded", function () {
   buttonSubmit.addEventListener("click", async (e) => {
 
   const payload = {
-    images: inputImg?.src || "",
+    images: inputImg?.value || "",
     category: inputCategori?.value || "",
     title: inputTitle?.value || "",
     published_at: inputPublisdate?.value || "",
     content: inputDeskripsi?.value || "",
-    avatar: inputImgProfil?.src || "",
+    avatar: inputImgProfil?.value || "",
     author: inputNama?.value || "",
   };
+  // console.log({ payload })
+
   if (inputId.value === "") {
     handleAddNews(payload);
   } else {
@@ -224,6 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 })
 });
+
 
 console.log("ini datanya",{buttonSubmit});
 
