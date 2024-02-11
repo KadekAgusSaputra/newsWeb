@@ -6,6 +6,8 @@ export function generateElement({
   href,
   elementHTML,
   src,
+  attributeOne = {},
+  attributeTwo = {},
 }) {
   const element = document.createElement(tag);
 
@@ -16,6 +18,9 @@ export function generateElement({
 
   if (tag === "a") element.href = href;
   if (tag === "img") element.src = src;
+
+  if (attributeOne) element.setAttribute(attributeOne.name, attributeOne.value);
+  if (attributeTwo) element.setAttribute(attributeTwo.name, attributeTwo.value);
 
   return element;
 }

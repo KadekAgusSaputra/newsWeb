@@ -10,6 +10,7 @@ import {
 import { generateElement, formatingDate, Icon } from "./utils.js";
 
 const postContainer = document.getElementById("post-container");
+
 const inputTitle = document.getElementById("judul_berita");
 const inputImg = document.getElementById("src_img");
 const inputCategori = document.getElementById("category_berita");
@@ -18,6 +19,7 @@ const inputDeskripsi = document.getElementById("deskripsi_berita");
 const inputImgProfil = document.getElementById("src_img_profil");
 const inputNama = document.getElementById("nama_profil");
 const buttonSubmit = document.getElementById("btn-submit");
+
 const inputId = document.getElementById("form-id");
 
 // nav background
@@ -99,6 +101,14 @@ document.addEventListener("DOMContentLoaded", function () {
           tag: "button",
           id: "button-edit",
           className: "btn btn-edit",
+          attributeOne: {
+            name: "data-bs-target",
+            value: "#exampleModal",
+          },
+          attributeTwo: {
+            name: "data-bs-toggle",
+            value: "modal",
+          },
           elementHTML: Icon.update,
         });
 
