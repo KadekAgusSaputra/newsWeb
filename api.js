@@ -8,7 +8,7 @@
 
 const BASE_URL = "http://128.199.167.159/v1/idc";
 
-export async function getNewsById({ id = 10 }) {
+export async function getNewsById({ id }) {
   try {
     const response = await fetch(`${BASE_URL}/news/${id}`, {
       method: "GET",

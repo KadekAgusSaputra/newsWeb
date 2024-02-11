@@ -1,7 +1,13 @@
 // Mengambil fungsi-fungsi yang ada di file api.js
 
-import { getNews,getNewsById,updateNewsById,createNews,deleteNewsById } from "./api.js";
-import { generateElement, formatingDate } from "./utils.js";
+import {
+  getNews,
+  getNewsById,
+  updateNewsById,
+  createNews,
+  deleteNewsById,
+} from "./api.js";
+import { generateElement, formatingDate, Icon } from "./utils.js";
 
 const postContainer = document.getElementById("post-container");
 const inputTitle = document.getElementById("judul_berita");
@@ -14,7 +20,6 @@ const inputNama = document.getElementById("nama_profil");
 const buttonSubmit = document.getElementById("btn-submit");
 const inputId = document.getElementById("form-id");
 
-
 // nav background
 let header = document.querySelector("header");
 
@@ -24,22 +29,22 @@ window.addEventListener("scroll", () => {
 
 //Filter
 $(document).ready(function () {
-    $(".filter-item").click(function () {
-        const value = $(this).attr("data-filter");
-        if (value == "all"){
-            $(".post-box").show("1000")
-        } else{
-            $(".post-box")
-                .not("." + value)
-                .hide(1000);
-            $(".post-box")
-            .filter("." + value)
-            .show("1000")
-        }
-    });
-    $(".filter-item").click(function () {
-        $(this).addClass("active-filter").siblings().removeClass("active-filter")
-    });
+  $(".filter-item").click(function () {
+    const value = $(this).attr("data-filter");
+    if (value == "all") {
+      $(".post-box").show("1000");
+    } else {
+      $(".post-box")
+        .not("." + value)
+        .hide(1000);
+      $(".post-box")
+        .filter("." + value)
+        .show("1000");
+    }
+  });
+  $(".filter-item").click(function () {
+    $(this).addClass("active-filter").siblings().removeClass("active-filter");
+  });
 });
 
 // template
@@ -50,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       const response = await getNews();
 
-      console.log({ response })
+      console.log({ response });
 
       response.forEach((news) => {
         // Buat pembungkus kartu nya
@@ -90,6 +95,19 @@ document.addEventListener("DOMContentLoaded", function () {
           className: "post-description",
         });
 
+        const edit = generateElement({
+          tag: "button",
+          id: "button-edit",
+          className: "btn btn-edit",
+          elementHTML: Icon.update,
+        });
+
+        edit.addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          handleShowNewsById(news.id);
+        });
+
         // ========= Pembungkus div profile
 
         const profile = generateElement({
@@ -113,7 +131,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         profile.append(...[profileImg, profileName]);
         postBox.append(
-          ...[postImg, category, postTitle, postDate, description, profile]
+          ...[
+            postImg,
+            category,
+            postTitle,
+            postDate,
+            description,
+            profile,
+            edit,
+          ]
         );
 
         postContainer.append(postBox);
@@ -124,7 +150,6 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   handleGetNews();
-
 
   async function handleUpdateNewsId(id, payload) {
     try {
@@ -162,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
       buttonSubmit.classList.remove("button-submit");
       buttonSubmit.classList.add("button-submit-edit");
 
-      submitButton.innerText = "Update";
+      buttonSubmit.innerText = "Update";
     } catch (error) {
       console.error("Error ngirim Nih: ", {
         error,
@@ -170,8 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  handleShowNewsById()
-
+  handleShowNewsById();
 
   async function handleAddNews(payload) {
     try {
@@ -189,12 +213,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (result?.code === 201) {
         alert("Berhasil menambahkan data");
 
-        inputImg.src = "";
+        inputImg.value = "";
         inputCategori.value = "";
         inputTitle.value = "";
         inputPublisdate.value = "";
-        inputDeskripsi.value = "",
-        inputImgProfil.src = "";
+        (inputDeskripsi.value = ""), (inputImgProfil.value = "");
         inputNama.value = "";
 
         window.location.reload();
@@ -207,36 +230,21 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   buttonSubmit.addEventListener("click", async (e) => {
+    e.preventDefault();
 
-  const payload = {
-    images: inputImg?.value || "",
-    category: inputCategori?.value || "",
-    title: inputTitle?.value || "",
-    published_at: inputPublisdate?.value || "",
-    content: inputDeskripsi?.value || "",
-    avatar: inputImgProfil?.value || "",
-    author: inputNama?.value || "",
-  };
-  // console.log({ payload })
-
-  if (inputId.value === "") {
-    handleAddNews(payload);
-  } else {
-    handleUpdateNewsId(inputId.value, payload);
-  }
-})
+    const payload = {
+      images: inputImg?.value || "",
+      category: inputCategori?.value || "",
+      title: inputTitle?.value || "",
+      published_at: inputPublisdate?.value || "",
+      content: inputDeskripsi?.value || "",
+      avatar: inputImgProfil?.value || "",
+      author: inputNama?.value || "",
+    };
+    if (inputId.value === "") {
+      handleAddNews(payload);
+    } else {
+      handleUpdateNewsId(inputId.value, payload);
+    }
+  });
 });
-
-
-console.log("ini datanya",{buttonSubmit});
-
-
-
-
-// "title": "...",
-// "author": "...",
-// "content": "...",
-// "category": "...",
-// "images": "...",
-// "avatar": "...",
-// "published_at": "..."
