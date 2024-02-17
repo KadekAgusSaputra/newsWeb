@@ -97,6 +97,11 @@ document.addEventListener("DOMContentLoaded", function () {
           className: "post-description",
         });
 
+        const postBtn = generateElement({
+          tag: "div",
+          className: "post-btn",
+        });
+
         const edit = generateElement({
           tag: "button",
           id: "button-edit",
@@ -117,6 +122,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
           handleShowNewsById(news.id);
         });
+
+        const buttonDelete = generateElement({
+          tag: "button",
+          id: "button-delete",
+          className: "btn btn-delete",
+          elementHTML: Icon.delete,
+        });
+
+              // Ketika tombol delete di klik maka akan menjalankan fungsi handleDeleteQuestion
+      buttonDelete.addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        handleDeleteNews(news.id);
+      });
 
         // ========= Pembungkus div profile
 
@@ -140,6 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // ========= Pembungkus div profile
 
         profile.append(...[profileImg, profileName]);
+        postBtn.append(...[edit,buttonDelete]);
         postBox.append(
           ...[
             postImg,
@@ -148,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
             postDate,
             description,
             profile,
-            edit,
+            postBtn,
           ]
         );
 
@@ -229,6 +249,24 @@ document.addEventListener("DOMContentLoaded", function () {
         inputPublisdate.value = "";
         (inputDeskripsi.value = ""), (inputImgProfil.value = "");
         inputNama.value = "";
+
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error ngirim Nih: ", {
+        error,
+      });
+    }
+  }
+
+  async function handleDeleteNews(id) {
+    try {
+      const result = await deleteNewsById({ id });
+
+      if (!result) return;
+
+      if (result?.code === 200) {
+        alert("Berhasil menghapus data");
 
         window.location.reload();
       }

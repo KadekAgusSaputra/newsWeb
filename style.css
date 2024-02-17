@@ -407,6 +407,12 @@ footer p {
   color: #fff;
 }
 
+.post-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 @media (max-width: 1060px) {
   .container {
     margin: 0 auto;
